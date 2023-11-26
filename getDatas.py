@@ -3,7 +3,7 @@ import json
 
 import requests
 
-from setting import client_id, client_secret
+from setting import load_env
 
 global trends
 trends = dict()
@@ -23,14 +23,13 @@ def getTrends():
 
 def getShoppingTrends(trend_keyword):
     url = "https://openapi.naver.com/v1/datalab/shopping/category/keywords"
-    print(client_id)
-    print(client_secret)
-    print("asdfasdf")
+    client_id, client_secret = load_env()
+    print(client_id, client_secret)
     headers = dict()
     headers["X-Naver-Client-Id"] = client_id
     headers["X-Naver-Client-Secret"] = client_secret
     data = dict()
-    data["startDate"] = str((datetime.datetime.today() - datetime.timedelta(days=14)).date())
+    data["startDate"] = str((datetime.datetime.today() - datetime.timedelta(weeks=4)).date())
     data["endDate"] = str(datetime.datetime.today().date())
     data["timeUnit"] = "date"
     data["category"] = "50000001"
