@@ -99,6 +99,8 @@ def train_and_evaluate_model(data):
     slope = (predictions[-1] - predictions[0]) / (len(predictions) - 1)
     upward_trend = slope > 0
 
+    print(slope)
+
     return slope, plt
 
 

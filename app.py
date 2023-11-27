@@ -78,6 +78,7 @@ def train2():
         cache[params] = train_and_evaluate_model(getShoppingTrends([params])['results'][0])
         scope = cache[params][0]
     advice = ""
+    print(cache)
     if scope < -1:
         advice = "매우 위험"
     elif scope > 1:
@@ -86,6 +87,10 @@ def train2():
         advice = "위험"
     elif scope > 0.5:
         advice = "안전"
+    elif scope < 0:
+        advice = "보통- 위험"
+    elif scope > 0:
+        advice = "보통- 안전"
     else:
         advice = "보통"
     return advice
