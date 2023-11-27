@@ -54,6 +54,7 @@ def getShoppingGraph(data):
     return plt
 
 def train_and_evaluate_model(data):
+    plt.clf()
     # 데이터 전처리
     df = pd.DataFrame(data['data'])
     df['period'] = pd.to_datetime(df['period'])

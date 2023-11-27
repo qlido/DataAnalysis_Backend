@@ -2,11 +2,13 @@ import matplotlib
 from flask import Flask, send_file, request, json
 from io import BytesIO
 
-from getDatas import getTrends, getShoppingTrends
+from flask_cors import CORS
+
+from getDatas import getTrends, getShoppingTrends, trends
 from main import getTrendsGraph, getShoppingGraph, train_and_evaluate_model
 
 app = Flask(__name__)
-
+CORS(app)
 matplotlib.rcParams['font.family'] = 'Malgun Gothic'
 matplotlib.rcParams['axes.unicode_minus'] = False
 
@@ -24,18 +26,21 @@ def index():
     img.seek(0)
     return send_file(img, mimetype='image/png')
 
+@app.route("/graphlist", methods=["GET"])
+def index2():
+    a = set()
+    for i in trends.values():
+        a.update(i)
+    return json.dumps(list(a), ensure_ascii=False)
+
+
 
 @app.route("/shopping", methods=["GET"])
 def shoping():
     params = request.args.getlist('keyword')
-    if len(params) == 0:
+    if len(params) == 0 or len(params) > 5:
         return 'No parameter'
     print(params)
-    if params in cacheShopping:
-        a = cacheShopping[params]
-    else:
-        cacheShopping[params] = getShoppingTrends(params)
-        a = cacheShopping[params]
     a = getShoppingTrends(params)
     plt = getShoppingGraph(a)
     img = BytesIO()
@@ -47,7 +52,8 @@ def shoping():
 @app.route("/train", methods=["GET"])
 def train():
     params = request.args.get('keyword')
-    if len(params) == 0:
+
+    if len(params) == 0 or len(params) > 5:
         return 'No parameter'
     print(params)
     if params in cache:
@@ -63,7 +69,7 @@ def train():
 @app.route("/train2", methods=["GET"])
 def train2():
     params = request.args.get('keyword')
-    if len(params) == 0:
+    if len(params) == 0 or len(params) > 5:
         return 'No parameter'
     print(params)
     if params in cache:
